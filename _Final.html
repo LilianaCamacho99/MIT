@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Abarrotes Inteligente</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+        body {
+            font-family: 'Baloo 2', cursive;
+            background-color: #f9f6f0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: #ffe4b5;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        h1 {
+            text-align: center;
+            color: #ff8c00;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: justify;
+            line-height: 1.6;
+        }
+        .button, .add-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff4500;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .button {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff4500;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #ff6347;
+        }
+        .button:hover, .add-cart-btn:hover {
+            background-color: #ff6347;
+        }
+        .section-title {
+            margin-top: 20px;
+            color: #ffa07a;
+            font-size: 1.8em;
+            border-bottom: 2px solid #ffa07a;
+            padding-bottom: 5px;
+        }
+        .card {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            margin: 15px 0;
+            background-color: #fafad2;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .alert {
+            background-color: #87cefa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            display: none;
+        }
+        .price-tag {
+            font-weight: bold;
+            color: #ff4500;
+        }
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .product-info img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .offer-tag {
+            background-color: #ff4500;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        .toggle-icon {
+            font-size: 1.5em;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        .cart-container {
+            background-color: #ffefd5;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px; /* Añadido para espaciar la sección */
+        }
+        .products {
+            flex: 3; /* Toma más espacio que el carrito */
+            padding-right: 20px; /* Espacio entre productos y carrito */
+        }
+        .cart {
+            flex: 1; /* Menos espacio para el carrito */
+            background-color: #ffefd5;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px; /* Cambiado a un valor más pequeño */
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        .remove-btn {
+            background-color: #ff4500;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tienda de Abarrotes Inteligente</h1>
+        <div class="flex-container">
+            <div class="products">
+                <!-- Sección de Predicción de Inventario -->
+                <h2 class="section-title">Predicción de Inventario <span class="toggle-icon">🔍</span></h2>
+                <div class="card">
+                    <p>La predicción de inventario analiza las ventas y sugiere productos para reabastecimiento.</p>
+                    <button class="button" onclick="toggleVisibility('prediccion')">Ver Predicción de Inventario</button>
+                    <div id="prediccion" class="alert"></div>
+                </div>
+                <!-- Sección de Notificaciones de Compra Inteligente -->
+                <h2 class="section-title">Notificaciones de Compra Inteligente <span class="toggle-icon">📬</span></h2>
+                <div class="card">
+                    <p>Promociones y descuentos enviados a los clientes cercanos.</p>
+                    <button class="button" onclick="toggleVisibility('notificaciones')">Enviar Notificación a Clientes</button>
+                    <div id="notificaciones" class="alert"></div>
+                </div>
+                <!-- Sección de Control de Caducidad Automatizado -->
+                <h2 class="section-title">Control de Caducidad <span class="toggle-icon">⏰</span></h2>
+                <div class="card">
+                    <p>Gestión de productos próximos a vencer con alertas y descuentos.</p>
+                    <button class="button" onclick="toggleVisibility('caducidad')">Ver Productos Próximos a Caducar</button>
+                    <div id="caducidad" class="alert"></div>
+                </div>
+                <!-- Ejemplos de Productos y Precios -->
+                <h2 class="section-title">Productos <span class="toggle-icon">🛒</span></h2>
+                <div class="card">
+                    <div class="product-info">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJEITuEuLcCCkYp0aN3PJjJiqZj2LjGtgikCRNRlfyw3zqJU005b9LZOrohhWa9n6rU9k&usqp=CAU" alt="Arroz 1kg">
+                        <p>Arroz 1kg - <span class="price-tag">$20.00</span></p>
+                        <button class="add-cart-btn" onclick="addToCart('Arroz', 20.00)">Añadir al carrito</button>
+                    </div>
+                    <div class="product-info">
+                        <img src="https://media.gettyimages.com/id/157280488/es/foto/frijoles-diagonales.jpg?s=612x612&w=gi&k=20&c=T2mBsVvtQGC629n9hkqOah1ZctAYUnVGhNDhMF5V-K4=" alt="Frijoles 1kg">
+                        <p>Frijoles 1kg - <span class="price-tag">$45.00</span></p>
+                        <button class="add-cart-btn" onclick="addToCart('Frijoles', 45.00)">Añadir al carrito</button>
+                    </div>
+                    <div class="product-info">
+                        <img src="https://www.unr.edu/main/images/news/2020/Mar/milk.jpg" alt="Leche 1L">
+                        <p>Leche 1L - <span class="price-tag">$25.00</span></p>
+                        <button class="add-cart-btn" onclick="addToCart('Leche', 25.00)">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Carrito de compras -->
+            <div class="cart">
+                <h2 class="section-title">Carrito de Compras <span class="toggle-icon">🛍️</span></h2>
+                <div id="cartItems"></div>
+                <p><strong>Total:</strong> $<span id="cartTotal">0.00</span></p>
+                <button class="button" onclick="emptyCart()">Vaciar Carrito</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables del carrito
+        let cartItems = {};
+        let totalAmount = 0;
+
+        // Funciones de la tienda
+        function mostrarPrediccion() {
+            return `
+                <p><strong>Recomendación:</strong> Comprar 20 unidades de arroz, 10 unidades de frijoles y 15 unidades de leche.</p>
+                <p><strong>Nota:</strong> Basado en datos históricos de demanda y patrones de consumo.</p>
+            `;
+        }
+
+        // Función de Notificaciones
+        function mostrarNotificaciones() {
+            return `
+                <p><strong>Notificación Enviada:</strong> ¡Descuentos especiales en artículos frescos! Ven y compra hoy.</p>
+                <p><strong>Ubicación:</strong> Clientes en 500 metros recibirán esta oferta.</p>
+            `;
+        }
+
+        // Función de Control de Caducidad
+        function mostrarCaducidad() {
+            return `
+                <p><strong>Productos próximos a vencer:</strong></p>
+                <ul>
+                    <li>Queso (vence en 5 días) - <span class="price-tag">Descuento del 20%</span></li>
+            <div class="product-info">
+                <img src="https://imag.bonviveur.com/queso-fresco-casero.jpg" alt=" Queso 1kg">
+                <p>Queso 1Kg - <span class="price-tag">$25.00 a $20 </span></p>
+                <div class="offer-tag">¡OFERTA!</div>
+            </div>
+                    <li>Pan de caja (vence en 2 días) - <span class="price-tag">Descuento del 30%</span></li>
+            <div class="product-info">
+                <img src="https://supermexicano.com.mx/wp-content/uploads/2021/09/Pan-de-caja-blanco.jpg" alt="Pan 1 Paquete">
+                <p> Pan (1 Paquete) - <span class="price-tag">$18.00 a $12.50 </span></p>
+                <div class="offer-tag">¡OFERTA!</div>
+            </div>
+                    <li>Yogurt (vence en 3 días) - <span class="price-tag">Descuento del 15%</span></li>
+            <div class="product-info">
+                <img src="https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/B6ADCE14-192F-4B0E-8498-A71B2F6F4A91/Derivates/C6F250B0-6E8F-47ED-BFAD-1C617B7E54A1.jpg" alt="Yogurt 1L">
+                <p> Yogurt 1L - <span class="price-tag">$15.00 a $13 </span></p>
+                <div class="offer-tag">¡OFERTA!</div>
+            </div>
+                </ul>
+            `;
+        }
+
+        // Función para mostrar información
+        function toggleVisibility(section) {
+            const alertDiv = document.getElementById(section);
+            if (alertDiv.style.display === "none" || alertDiv.style.display === "") {
+                switch (section) {
+                    case 'prediccion':
+                        alertDiv.innerHTML = mostrarPrediccion();
+                        break;
+                    case 'notificaciones':
+                        alertDiv.innerHTML = mostrarNotificaciones();
+                        break;
+                    case 'caducidad':
+                        alertDiv.innerHTML = mostrarCaducidad();
+                        break;
+                }
+                alertDiv.style.display = "block";
+            } else {
+                alertDiv.style.display = "none";
+            }
+        }
+
+        // Función para agregar al carrito
+        function addToCart(item, price) {
+            if (cartItems[item]) {
+                cartItems[item].quantity++;
+            } else {
+                cartItems[item] = { price: price, quantity: 1 };
+            }
+            totalAmount += price;
+            updateCartDisplay();
+        }
+
+        // Función para actualizar el carrito
+        function updateCartDisplay() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            cartItemsDiv.innerHTML = ""; // Limpiar el carrito
+            for (const item in cartItems) {
+                const cartItem = cartItems[item];
+                cartItemsDiv.innerHTML += `<div class="cart-item"><span>${item} x${cartItem.quantity}</span> <span>$${(cartItem.price * cartItem.quantity).toFixed(2)}</span> <button class="remove-btn" onclick="removeFromCart('${item}')">Eliminar</button></div>`;
+            }
+            document.getElementById('cartTotal').textContent = totalAmount.toFixed(2);
+        }
+
+        // Función para eliminar del carrito
+        function removeFromCart(item) {
+            if (cartItems[item]) {
+                totalAmount -= cartItems[item].price;
+                cartItems[item].quantity--;
+                if (cartItems[item].quantity === 0) {
+                    delete cartItems[item];
+                }
+                updateCartDisplay();
+            }
+        }
+
+        // Función para vaciar el carrito
+        function emptyCart() {
+            cartItems = {};
+            totalAmount = 0;
+            updateCartDisplay();
+        }
+
+        // Inicialización del carrito
+        document.getElementById('cart').style.display = "flex";
+    </script>
+</body>
+</html>
